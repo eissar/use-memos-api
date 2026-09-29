@@ -14,10 +14,10 @@ const headers = {
 };
 
 async function getAuthedUserName() {
-  const authUrl = `${MEMOS_BASE_URL}/api/v1/auth/status`;
+  const authUrl = `${MEMOS_BASE_URL}/api/v1/auth/me`;
   const response = await fetch(authUrl, {
-    method: "POST",
     headers,
+    signal: AbortSignal.timeout(15000),
   });
 
   if (!response.ok) {
@@ -27,9 +27,9 @@ async function getAuthedUserName() {
     Deno.exit(1);
   }
 
-  const user = await response.json();
+  const user = (await response.json())?.user;
   if (!user?.name) {
-    console.error("Error: auth/status did not return a user name");
+    console.error("Error: auth/me did not return a user name");
     Deno.exit(1);
   }
 
@@ -52,7 +52,7 @@ do {
     memosUrl.searchParams.delete("pageToken");
   }
 
-  const response = await fetch(memosUrl.toString(), { headers });
+  const response = await fetch(memosUrl.toString(), { headers, signal: AbortSignal.timeout(15000) });
   if (!response.ok) {
     const body = await response.text();
     console.error(`Error fetching memos: ${response.status} ${response.statusText}`);
