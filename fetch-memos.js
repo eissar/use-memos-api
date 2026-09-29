@@ -1,11 +1,11 @@
 const MEMOS_KEY = Deno.env.get("MEMOS_KEY");
-const MEMOS_BASE_URL = Deno.env.get("MEMOS_BASE_URL") ?? "http://mini-server:5230";
+const MEMOS_BASE_URL = Deno.env.get("MEMOS_BASE_URL");
 const MEMOS_PARENT = Deno.env.get("MEMOS_PARENT");
 const MEMOS_STATE = Deno.env.get("MEMOS_STATE") ?? "NORMAL";
 const MEMOS_PAGE_SIZE = Deno.env.get("MEMOS_PAGE_SIZE") ?? "100";
 
-if (!MEMOS_KEY) {
-  console.error("Error: MEMOS_KEY environment variable is not set");
+if (!MEMOS_KEY || !MEMOS_BASE_URL) {
+  console.error("Error: MEMOS_KEY and MEMOS_BASE_URL environment variables must be set");
   Deno.exit(1);
 }
 
